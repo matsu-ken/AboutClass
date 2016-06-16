@@ -10,23 +10,30 @@ class Sample1 {
     form.Width = 300;
     form.Height = 200;
 
-    //ピクチャボックスの作成
-    PictureBox pictureBox = new PictureBox();
+    //要素数2の配列を作成
+    PictureBox[] pictureBox = new PictureBox[2];
 
-    //オブジェクトの作成
-    Car car = new Car();
-    //メソッドの呼び出し
-    car.Move();
-    car.Move();
+    for (int i = 0; i < pictureBox.Length; i++) {
+      //要素数分のピクチャボックスの作成
+      pictureBox[i] = new PictureBox();
+      //要素数分のピクチャボックスをフォームにのせる
+      pictureBox[i].Parent = form;
+    }
 
-    //フィールドを介してフィールドにアクセス
-    pictureBox.Image = car.GetImage();
-    //プロパティを介してフィールドにアクセス
-    pictureBox.Top = car.Top;
-    pictureBox.Left = car.Left;
+    //要素数2の配列を作成
+    Car[] car = new Car[2];
+    car[0] = new Car();
+    car[1] = new RacingCar();
 
-    //ピクチャボックスをフォーム上にのせる
-    pictureBox.Parent = form;
+    for (int i = 0; i < car.Length; i++) {
+      //メソッドの呼び出し
+      car[i].Move();
+      //メソッドを呼び出して値を取得
+      pictureBox[i].Image = car[i].GetImage();
+      pictureBox[i].Top = car[i].Top;
+      pictureBox[i].Left = car[i].Left;
+    }
+
     //フォームを指定して起動
     Application.Run(form);
   }
@@ -35,8 +42,10 @@ class Sample1 {
 class Car {
   //フィールドの宣言(privateよりクラス外部からアクセス不可)
   private Image img;
-  private int top;
-  private int left;
+  //protectedより派生クラスからアクセス可
+  protected int top;
+  protected int left;
+
   //コンストラクタ(オブジェクトの初期化を行う)
   public Car() {
     //画像の読み込み
@@ -45,8 +54,8 @@ class Car {
     top = 0;
     left = 0;
   }
-  //Moveメソッドの定義
-  public void Move() {
+  //上書きされる基本クラスのメンバ
+  virtual public void Move() {
     //上端位置、左端位置を10ずつ移動
     top = top + 10;
     left = left + 10;
@@ -71,5 +80,13 @@ class Car {
     set { left = value; }
     get { return left; }
   }
-
+}
+//Carクラスを拡張して、RacingCarクラスを設計
+class RacingCar : Car {
+  //上書きする派生クラスのメンバ
+  public override void Move() {
+    //上端位置、左端位置を100ずつ移動
+    top = top + 100;
+    left = left + 100;
+  }
 }
