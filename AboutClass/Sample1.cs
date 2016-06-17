@@ -2,7 +2,7 @@
 using System.Drawing;
 
 class Sample1 {
-  public static void Main() {
+  public static void main() {
 
     //フォームの作成
     Form form = new Form();

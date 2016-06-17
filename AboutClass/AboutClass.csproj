@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Sample1.cs" />
     <Compile Include="Sample2.cs" />
+    <Compile Include="Sample3.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
