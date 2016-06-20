@@ -1,8 +1,9 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
+using System;
 
 class Sample1 {
-  public static void main() {
+  public static void Main() {
 
     //フォームの作成
     Form form = new Form();
@@ -27,16 +28,30 @@ class Sample1 {
 
     for (int i = 0; i < car.Length; i++) {
       //メソッドの呼び出し
-      car[i].Move();
+      //car[i].Move();
       //メソッドを呼び出して値を取得
       pictureBox[i].Image = car[i].GetImage();
       pictureBox[i].Top = car[i].Top;
       pictureBox[i].Left = car[i].Left;
     }
 
-    //フォームを指定して起動
-    Application.Run(form);
-  }
+		string number = Console.ReadLine();
+		car[1].Move(int.Parse(number));
+		pictureBox[1].Top = car[1].Top;
+		pictureBox[1].Left = car[1].Left;
+		//ボタン作成
+		Button button = new Button();
+		button.Text = "ボタン";
+		button.Dock = DockStyle.Bottom;
+		button.Parent = form;
+
+		//フォームを指定して起動
+		Application.Run(form);
+	}
+	//ボタンイベント
+	public static void button_Click(object sender, EventArgs e) {
+
+	}
 }
 //Carクラスの定義
 class Car {
@@ -55,10 +70,10 @@ class Car {
     left = 0;
   }
   //上書きされる基本クラスのメンバ
-  virtual public void Move() {
-    //上端位置、左端位置を10ずつ移動
-    top = top + 10;
-    left = left + 10;
+  virtual public void Move(int distance) {
+    //上端位置、左端位置を移動
+    top = top + distance;
+    left = left + distance;
   }
   //SetImageメソッド、imageフィールドに画像を設定
   public void SetImage(Image i) {
@@ -83,10 +98,13 @@ class Car {
 }
 //Carクラスを拡張して、RacingCarクラスを設計
 class RacingCar : Car {
-  //上書きする派生クラスのメンバ
-  public override void Move() {
-    //上端位置、左端位置を100ずつ移動
-    top = top + 100;
-    left = left + 100;
+	public RacingCar() {
+		//img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
+	}
+	//上書きする派生クラスのメンバ
+	public override void Move(int distance) {
+    //上端位置、左端位置を移動
+    top = top + distance;
+    left = left + distance;
   }
 }
