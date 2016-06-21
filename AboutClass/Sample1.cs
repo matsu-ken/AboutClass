@@ -18,13 +18,13 @@ class Sample1 {
 			pictureBox[i] = new PictureBox();
 			pictureBox[i].Parent = form;
 		}
-
+		pictureBox[0].Visible = false;
 		//要素数4の配列を作成
 		Car[] car = new Car[4];
 		car[0] = new Car();
 		car[1] = new RacingCar();
-		car[2] = new Car();
-		car[3] = new Car();
+		car[2] = new RacingCar2();
+		car[3] = new RacingCar3();
 
 
 		for (int i = 0; i < car.Length; i++) {
@@ -36,10 +36,6 @@ class Sample1 {
 			pictureBox[i].Left = car[i].Left;
 		}
 
-		//string number = Console.ReadLine();
-		//car[1].Move(int.Parse(number));
-		//pictureBox[1].Top = car[1].Top;
-		//pictureBox[1].Left = car[1].Left;
 		//ボタン作成
 		Button button = new Button();
 		button.Text = "ボタン";
@@ -47,8 +43,12 @@ class Sample1 {
 		button.Parent = form;
 		//ボタンのクリック機能
 		button.Click += delegate (object sender, EventArgs e) {
-			car[1].Move(int.Parse("10"));
+			car[1].Move(int.Parse("5"));
 			pictureBox[1].Left = car[1].Left;
+			car[2].Move(int.Parse("10"));
+			pictureBox[2].Left = car[2].Left;
+			car[3].Move(int.Parse("1"));
+			pictureBox[3].Left = car[3].Left;
 		};
 		//フォームを指定して起動
 		Application.Run(form);
@@ -57,14 +57,12 @@ class Sample1 {
 //Carクラスの定義
 class Car {
 	//フィールドの宣言(protectedより派生クラスからアクセス可)
-	public Image img;
+	protected Image img;
 	protected int top;
 	protected int left;
 
 	//コンストラクタ(オブジェクトの初期化を行う)
 	public Car() {
-		//画像の読み込み
-		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
 		//位置を0に設定
 		top = 0;
 		left = 0;
@@ -99,12 +97,33 @@ class Car {
 //Carクラスを拡張して、RacingCarクラスを設計
 class RacingCar : Car {
 	public RacingCar() {
-		img = Image.FromFile("C:\\Users\\matsuoka\\Desktop\\car2.jpg");
-		top = 100;
+		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
+		top = 0;
 	}
 	//上書きする派生クラスのメンバ
 	override public void Move(int distance) {
 		//上端位置、左端位置を移動
+		top = top + distance;
+		left = left + distance;
+	}
+}
+
+class RacingCar2 : Car {
+	public RacingCar2() {
+		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
+		top = 75;
+	}
+	override public void Move(int distance) {
+		top = top + distance;
+		left = left + distance;
+	}
+}
+class RacingCar3 : Car {
+	public RacingCar3() {
+		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
+		top = 150;
+	}
+	override public void Move(int distance) {
 		top = top + distance;
 		left = left + distance;
 	}
