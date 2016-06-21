@@ -12,66 +12,78 @@ class Sample1 {
 		form.Height = 300;
 
 		//要素数3の配列を作成
-		PictureBox[] pictureBox = new PictureBox[4];
+		PictureBox[] pictureBox = new PictureBox[3];
 		for (int i = 0; i < pictureBox.Length; i++) {
 			//要素数分のピクチャボックスの作成
 			pictureBox[i] = new PictureBox();
 			pictureBox[i].Parent = form;
 		}
-		pictureBox[0].Visible = false;
-		//要素数4の配列を作成
-		Car[] car = new Car[4];
-		car[0] = new Car();
-		car[1] = new RacingCar();
-		car[2] = new RacingCar2();
-		car[3] = new RacingCar3();
+		//非表示
+		//pictureBox[0].Visible = false;
 
-
+		//要素数3の配列を作成
+		Car[] car = new Car[3];
+		car[0] = new Mario();
+		car[1] = new Luigi();
+		car[1].Top = 75;
+		car[2] = new RacingCar3();
+		car[2].Top = 150;
 		for (int i = 0; i < car.Length; i++) {
-			//メソッドの呼び出し
-			//car[i].Move();
 			//メソッドを呼び出して値を取得
 			pictureBox[i].Image = car[i].GetImage();
 			pictureBox[i].Top = car[i].Top;
 			pictureBox[i].Left = car[i].Left;
 		}
 
-		//ボタン作成
+		//ボタンの作成
 		Button button = new Button();
-		button.Text = "ボタン";
-		button.Dock = DockStyle.Bottom;
+		button.Size = new Size(100, 30);
+		button.Text = "押すと移動";
+		button.Location = new Point(10, form.Height - 80);
+		button.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
 		button.Parent = form;
-		//ボタンのクリック機能
+		//押したときの処理
 		button.Click += delegate (object sender, EventArgs e) {
-			car[1].Move(int.Parse("5"));
+			car[0].Move();
+			pictureBox[0].Left = car[0].Left;
+			car[1].Move();
 			pictureBox[1].Left = car[1].Left;
-			car[2].Move(int.Parse("10"));
+			car[2].Move();
 			pictureBox[2].Left = car[2].Left;
-			car[3].Move(int.Parse("1"));
-			pictureBox[3].Left = car[3].Left;
 		};
-		//フォームを指定して起動
-		Application.Run(form);
+		//リセットボタンの作成
+		Button resetButton = new Button();
+		resetButton.Size = new Size(100, 30);
+		resetButton.Text = "リセット";
+		resetButton.Location = new Point(130, form.Height - 80);
+		resetButton.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+		resetButton.Parent = form;
+		//押した時の処理
+		resetButton.Click += delegate (object sender, EventArgs e) {
+			for (int i = 0; i < car.Length; i++) {
+				pictureBox[i].Left = 0;
+			}
+		};
+			//フォームを指定して起動
+			Application.Run(form);
 	}
 }
 //Carクラスの定義
 class Car {
-	//フィールドの宣言(protectedより派生クラスからアクセス可)
+	//フィールドの宣言(protectedより派生クラスからのアクセス可)
 	protected Image img;
 	protected int top;
 	protected int left;
-
+	protected int v = 0;	//速度(velocity)
+	//protected int 
 	//コンストラクタ(オブジェクトの初期化を行う)
 	public Car() {
-		//位置を0に設定
-		top = 0;
-		left = 0;
 	}
 	//上書きされる基本クラスのメンバ
-	virtual public void Move(int distance) {
+	virtual public void Move() {
 		//上端位置、左端位置を移動
-		top = top + distance;
-		left = left + distance;
+		top = top + v;
+		left = left + v;
 	}
 	//SetImageメソッド、imageフィールドに画像を設定
 	public void SetImage(Image i) {
@@ -95,36 +107,37 @@ class Car {
 	}
 }
 //Carクラスを拡張して、RacingCarクラスを設計
-class RacingCar : Car {
-	public RacingCar() {
+class Mario : Car {
+	public Mario() {
 		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
-		top = 0;
+		v = 5;
 	}
-	//上書きする派生クラスのメンバ
-	override public void Move(int distance) {
-		//上端位置、左端位置を移動
-		top = top + distance;
-		left = left + distance;
-	}
+	////上書きする派生クラスのメンバ
+	//override public void Move() {
+	//	top = top + v;
+	//	left = left + v;
+	//}
 }
-
-class RacingCar2 : Car {
-	public RacingCar2() {
+class Luigi : Car {
+	public Luigi() {
 		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
-		top = 75;
+		v = 8;
 	}
-	override public void Move(int distance) {
-		top = top + distance;
-		left = left + distance;
-	}
+	//override public void Move() {
+	//	top = top + v;
+	//	left = left + v;
+	//}
 }
 class RacingCar3 : Car {
 	public RacingCar3() {
 		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
-		top = 150;
+		v = 2;
 	}
-	override public void Move(int distance) {
-		top = top + distance;
-		left = left + distance;
+	override public void Move() {
+		top = top + v;
+		left = left + v;
+		if (left >= 50) {
+			left = left + 10;
+		}
 	}
 }
