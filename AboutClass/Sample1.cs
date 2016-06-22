@@ -21,7 +21,7 @@ class Sample1 {
 
 		//要素数3の配列を作成
 		Car[] car = new Car[3];
-		car[0] = new RacingCar();
+		car[0] = new RacingCar1();
 		car[1] = new RacingCar2();
 		car[1].Top = 75;
 		car[2] = new RacingCar3();
@@ -60,8 +60,10 @@ class Sample1 {
 			for (int i = 0; i < car.Length; i++) {
 				car[i].Left = 0;
 				pictureBox[i].Left = 0;
+				car[i].fuel = 100;
 			}
 		};
+
 		//フォームを指定して起動
 		Application.Run(form);
 	}
@@ -73,13 +75,18 @@ class Car {
 	private int top = 0;
 	protected int left;
 	protected int v = 0;    //速度(velocity)
+	public int fuel = 100;	//燃料
 	//コンストラクタ(オブジェクトの初期化を行う)
 	public Car() {
+		string png = System.IO.Path.GetFullPath("..\\..\\..\\car.png");
+		img = Image.FromFile(png);
 	}
 	//上書きされる基本クラスのメンバ
 	virtual public void Move() {
-		//左端位置を移動
-		left = left + v;
+		fuel = fuel - v;
+		if (fuel >= 0) {
+			left = left + v;
+		}
 	}
 	//SetImageメソッド、imageフィールドに画像を設定
 	public void SetImage(Image i) {
@@ -103,37 +110,41 @@ class Car {
 	}
 }
 //Carクラスを拡張して、RacingCarクラスを設計
-class RacingCar : Car {
-	public RacingCar() {
-		//読み込み場所を指定してください
-		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
-		v = 5;
+class RacingCar1 : Car {
+	public RacingCar1() {
+		v = 6;
 	}
 	////上書きする派生クラスのメンバ
 	//override public void Move() {
-	//	top = top + v;
-	//	left = left + v;
+	//	fuel = fuel - v;
+	//	if (fuel >= 0) {
+	//		left = left + v;
+	//	}
 	//}
 }
 class RacingCar2 : Car {
 	public RacingCar2() {
-		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
 		v = 10;
 	}
 	//override public void Move() {
-	//	top = top + v;
-	//	left = left + v;
+	//	fuel = fuel - v;
+	//	if (fuel >= 0) {
+	//		left = left + v;
+	//	}
 	//}
 }
 class RacingCar3 : Car {
 	public RacingCar3() {
-		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
 		v = 2;
 	}
 	override public void Move() {
-		left = left + v;
-		if (left >= 50) {
+		if (fuel >= 0) {
+			fuel = fuel -v;
+			left = left + v;
+			if (left > 20) {
 				left = left + 10;
+				fuel = fuel - 10;
+			}
 		}
 	}
 }
