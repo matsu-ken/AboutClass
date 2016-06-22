@@ -13,44 +13,41 @@ class Sample1 {
 
 		//要素数3の配列を作成
 		PictureBox[] pictureBox = new PictureBox[3];
-		for (int i = 0; i < pictureBox.Length; i++) {
-			//要素数分のピクチャボックスの作成
-			pictureBox[i] = new PictureBox();
-			pictureBox[i].Parent = form;
-		}
-		//非表示
-		//pictureBox[0].Visible = false;
+			for (int i = 0; i < pictureBox.Length; i++) {
+				//要素数分のピクチャボックスの作成
+				pictureBox[i] = new PictureBox();
+				pictureBox[i].Parent = form;
+			}
 
 		//要素数3の配列を作成
 		Car[] car = new Car[3];
-		car[0] = new Mario();
-		car[1] = new Luigi();
+		car[0] = new RacingCar();
+		car[1] = new RacingCar2();
 		car[1].Top = 75;
 		car[2] = new RacingCar3();
 		car[2].Top = 150;
-		for (int i = 0; i < car.Length; i++) {
-			//メソッドを呼び出して値を取得
-			pictureBox[i].Image = car[i].GetImage();
-			pictureBox[i].Top = car[i].Top;
-			pictureBox[i].Left = car[i].Left;
-		}
+			for (int i = 0; i < car.Length; i++) {
+				//メソッドを呼び出して値を取得
+				pictureBox[i].Image = car[i].GetImage();
+				pictureBox[i].Top = car[i].Top;
+				pictureBox[i].Left = car[i].Left;
+			}
 
 		//ボタンの作成
 		Button button = new Button();
 		button.Size = new Size(100, 30);
-		button.Text = "押すと移動";
+		button.Text = "移動";
 		button.Location = new Point(10, form.Height - 80);
 		button.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
 		button.Parent = form;
 		//押したときの処理
 		button.Click += delegate (object sender, EventArgs e) {
-			car[0].Move();
-			pictureBox[0].Left = car[0].Left;
-			car[1].Move();
-			pictureBox[1].Left = car[1].Left;
-			car[2].Move();
-			pictureBox[2].Left = car[2].Left;
+			for(int i = 0; i < car.Length; i++) {
+				car[i].Move();
+				pictureBox[i].Left = car[i].Left;
+			}
 		};
+
 		//リセットボタンの作成
 		Button resetButton = new Button();
 		resetButton.Size = new Size(100, 30);
@@ -61,28 +58,27 @@ class Sample1 {
 		//押した時の処理
 		resetButton.Click += delegate (object sender, EventArgs e) {
 			for (int i = 0; i < car.Length; i++) {
+				car[i].Left = 0;
 				pictureBox[i].Left = 0;
 			}
 		};
-			//フォームを指定して起動
-			Application.Run(form);
+		//フォームを指定して起動
+		Application.Run(form);
 	}
 }
 //Carクラスの定義
 class Car {
 	//フィールドの宣言(protectedより派生クラスからのアクセス可)
 	protected Image img;
-	protected int top;
+	private int top = 0;
 	protected int left;
-	protected int v = 0;	//速度(velocity)
-	//protected int 
+	protected int v = 0;    //速度(velocity)
 	//コンストラクタ(オブジェクトの初期化を行う)
 	public Car() {
 	}
 	//上書きされる基本クラスのメンバ
 	virtual public void Move() {
-		//上端位置、左端位置を移動
-		top = top + v;
+		//左端位置を移動
 		left = left + v;
 	}
 	//SetImageメソッド、imageフィールドに画像を設定
@@ -107,8 +103,9 @@ class Car {
 	}
 }
 //Carクラスを拡張して、RacingCarクラスを設計
-class Mario : Car {
-	public Mario() {
+class RacingCar : Car {
+	public RacingCar() {
+		//読み込み場所を指定してください
 		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
 		v = 5;
 	}
@@ -118,10 +115,10 @@ class Mario : Car {
 	//	left = left + v;
 	//}
 }
-class Luigi : Car {
-	public Luigi() {
+class RacingCar2 : Car {
+	public RacingCar2() {
 		img = Image.FromFile("C:\\Users\\matsuoka\\Documents\\work_place\\AboutClass\\car.png");
-		v = 8;
+		v = 10;
 	}
 	//override public void Move() {
 	//	top = top + v;
@@ -134,10 +131,9 @@ class RacingCar3 : Car {
 		v = 2;
 	}
 	override public void Move() {
-		top = top + v;
 		left = left + v;
 		if (left >= 50) {
-			left = left + 10;
+				left = left + 10;
 		}
 	}
 }
