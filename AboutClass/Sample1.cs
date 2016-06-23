@@ -11,15 +11,16 @@ class Sample1 {
 		form.Width = 600;
 		form.Height = 300;
 
-		//要素数3の配列を作成
+		//要素数3の配列を作成(PictureBox)
 		PictureBox[] pictureBox = new PictureBox[3];
 			for (int i = 0; i < pictureBox.Length; i++) {
-				//要素数分のピクチャボックスの作成
-				pictureBox[i] = new PictureBox();
-				pictureBox[i].Parent = form;
-			}
+			//要素数分のオブジェクトの作成
+			pictureBox[i] = new PictureBox();
+			//要素数分のオブジェクトをフォーム上にのせる
+			pictureBox[i].Parent = form;
+		}
 
-		//要素数3の配列を作成
+		//要素数3の配列を作成(Car)
 		Car[] car = new Car[3];
 		car[0] = new RacingCar1();
 		car[1] = new RacingCar2();
@@ -27,12 +28,23 @@ class Sample1 {
 		car[2] = new RacingCar3();
 		car[2].Top = 150;
 			for (int i = 0; i < car.Length; i++) {
-				//メソッドを呼び出して値を取得
+			//メソッドを呼び出して値を取得
 				pictureBox[i].Image = car[i].GetImage();
 				pictureBox[i].Top = car[i].Top;
 				pictureBox[i].Left = car[i].Left;
 			}
-
+		//要素数3の配列を作成(Label)
+		Label[] label = new Label[3];
+		string[] position = new string[3] { "上", "中", "下" };
+		for (int i = 0; i < label.Length; i++) {
+			label[i] = new Label();
+			label[i].Text = car[i] + " (" + position[i] + ")\n残量：" + car[i].fuel + "/" + car[i].fuelMax;
+			label[i].Anchor = (AnchorStyles.Bottom | AnchorStyles.Left);
+			label[i].Parent = form;
+		}
+		label[0].Location = new Point(250, form.Height - 80);
+		label[1].Location = new Point(360, form.Height - 80);
+		label[2].Location = new Point(470, form.Height - 80);
 		//ボタンの作成
 		Button button = new Button();
 		button.Size = new Size(100, 30);
@@ -45,6 +57,9 @@ class Sample1 {
 			for(int i = 0; i < car.Length; i++) {
 				car[i].Move();
 				pictureBox[i].Left = car[i].Left;
+				if(car[i].fuel >= 0) {
+					label[i].Text = car[i] + " (" + position[i] + ")\n残量：" + car[i].fuel + "/" + car[i].fuelMax;
+				}
 			}
 		};
 
@@ -60,32 +75,36 @@ class Sample1 {
 			for (int i = 0; i < car.Length; i++) {
 				car[i].Left = 0;
 				pictureBox[i].Left = 0;
-				car[i].fuel = 100;
+				car[i].fuel = car[i].fuelMax;
+				label[i].Text = car[i] + " (" + position[i] + ")\n残量：" + car[i].fuel + "/" + car[i].fuelMax;
 			}
 		};
-
+		
 		//フォームを指定して起動
 		Application.Run(form);
 	}
 }
 //Carクラスの定義
 class Car {
-	//フィールドの宣言(protectedより派生クラスからのアクセス可)
-	protected Image img;
-	private int top = 0;
+	//フィールドの宣言
+	public Image img;
+	private int top;
 	protected int left;
-	protected int v = 0;    //速度(velocity)
-	public int fuel = 100;	//燃料
+	public int v;		//速度(velocity)
+	public int fuel;    //燃料
+	public int fuelMax;
 	//コンストラクタ(オブジェクトの初期化を行う)
 	public Car() {
 		string png = System.IO.Path.GetFullPath("..\\..\\..\\car.png");
 		img = Image.FromFile(png);
+		fuel = 500;
+		fuelMax = 500;
 	}
 	//上書きされる基本クラスのメンバ
-	virtual public void Move() {
-		fuel = fuel - v;
+	public virtual void Move() {
+		fuel -= v;
 		if (fuel >= 0) {
-			left = left + v;
+			left += v;
 		}
 	}
 	//SetImageメソッド、imageフィールドに画像を設定
@@ -112,38 +131,25 @@ class Car {
 //Carクラスを拡張して、RacingCarクラスを設計
 class RacingCar1 : Car {
 	public RacingCar1() {
-		v = 6;
+		v = 8;
 	}
-	////上書きする派生クラスのメンバ
-	//override public void Move() {
-	//	fuel = fuel - v;
-	//	if (fuel >= 0) {
-	//		left = left + v;
-	//	}
-	//}
 }
 class RacingCar2 : Car {
 	public RacingCar2() {
 		v = 10;
 	}
-	//override public void Move() {
-	//	fuel = fuel - v;
-	//	if (fuel >= 0) {
-	//		left = left + v;
-	//	}
-	//}
 }
 class RacingCar3 : Car {
 	public RacingCar3() {
 		v = 2;
 	}
-	override public void Move() {
-		if (fuel >= 0) {
-			fuel = fuel -v;
-			left = left + v;
-			if (left > 20) {
-				left = left + 10;
-				fuel = fuel - 10;
+	 public override void Move() {
+		if (fuel > 0) {
+			fuel -= v;
+			left += v;
+			if (left >= 50) {
+				left += 10;
+				fuel -= 10;
 			}
 		}
 	}
