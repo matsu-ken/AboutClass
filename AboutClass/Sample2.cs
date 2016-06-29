@@ -2,31 +2,6 @@
 using System;
 using System.Windows.Forms;
 
-public interface ISwitch {
-  //ChangeChannelメソッド、チャンネルを切り替える機能
-  void ChangeChannel(int nextChannel);
-}
-
-//TVクラスの定義
-public class TV : ISwitch {
-  private int channel = 0;
-  public TV() {
-  }
-  //ChangeChannelメソッド
-  public void ChangeChannel(int nextChannel) {
-    this.channel = nextChannel;
-    Console.WriteLine(channel + "に変更されました。");
-  }
-}
-//Humanクラスの定義
-public class Human {
-  public Human() {
-  }
-  //PushChannelメソッド
-  public void PushChannel(int nextChannel, ISwitch tv) {
-    tv.ChangeChannel(nextChannel);
-  }
-}
 //Programクラス
 class Program {
 	static void Main(string[] args) {
@@ -35,6 +10,7 @@ class Program {
 		bool judge = true;
 		while (judge) {
 			string number = Console.ReadLine();
+			//例外処理
 			try {
 				human.PushChannel(int.Parse(number), tv1);
 			}
@@ -48,5 +24,32 @@ class Program {
 				}
 			}
 		}
+	}
+}
+
+public interface ISwitch {
+	//ChangeChannelメソッド、チャンネルを切り替える機能
+	void ChangeChannel(int nextChannel);
+}
+
+//TVクラスの定義
+public class TV : ISwitch {
+	private int channel = 0;
+	public TV() {
+	}
+	//ChangeChannelメソッド
+	public void ChangeChannel(int nextChannel) {
+		this.channel = nextChannel;
+		Console.WriteLine(channel + "に変更されました。");
+	}
+}
+
+//Humanクラスの定義
+public class Human {
+	public Human() {
+	}
+	//PushChannelメソッド
+	public void PushChannel(int nextChannel, ISwitch tv) {
+		tv.ChangeChannel(nextChannel);
 	}
 }
